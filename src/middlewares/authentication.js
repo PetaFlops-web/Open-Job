@@ -1,0 +1,23 @@
+import TokenManager from "../security/token-manager";
+import response from "../utils/response";
+
+async function authenticateToken(req, res, next) {
+  const token = req.headers.authorization;
+  if (token && token.indexOf("Bearer ") !== -1) {
+    try {
+      const user = TokenManager.verify(
+        token.split("Bearer ")[1],
+        process.env.ACCESS_TOKEN_KEY,
+      );
+      req.user = user;
+
+      return next();
+    } catch (error) {
+      return response(res, 400, error.message, null);
+    }
+  }
+
+  return response(res, 401, "Unauthorized", null);
+}
+
+export default authenticateToken;

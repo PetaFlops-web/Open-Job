@@ -1,0 +1,43 @@
+{
+  "name": "proyek-open-job",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "homepage": "https://github.com/PetaFlops-web/Open-Job#readme",
+  "bugs": {
+    "url": "https://github.com/PetaFlops-web/Open-Job/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PetaFlops-web/Open-Job.git"
+  },
+  "license": "ISC",
+  "author": "akbar",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start:dev": "node node_modules/nodemon/bin/nodemon.js server.js",
+    "migrate:create": "node node_modules/node-pg-migrate/bin/node-pg-migrate.js create",
+    "migrate:up": "node node_modules/node-pg-migrate/bin/node-pg-migrate.js up",
+    "lint": "node node_modules/eslint/bin/eslint.js ."
+  },
+  "dependencies": {
+    "amqplib": "^0.10.9",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "joi": "^17.9.2",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1",
+    "nanoid": "^3.3.6",
+    "node-pg-migrate": "^8.0.4",
+    "nodemon": "^3.1.14",
+    "pg": "^8.18.0",
+    "redis": "^5.11.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.1",
+    "globals": "^17.3.0"
+  }
+}

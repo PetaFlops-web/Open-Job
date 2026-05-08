@@ -8,6 +8,8 @@ import {
   getJobById,
 } from "./jobs.service.js";
 import response from "../utils/response.js";
+import CacheService from "../cache/redis.service.js";
+
 const addJobHandler = async (req, res) => {
   try {
     const {
@@ -43,10 +45,14 @@ const addJobHandler = async (req, res) => {
       },
       user,
     );
+
+    const cache = new CacheService();
+    await cache.delete(`job-${id}`);
+
     return response(res, 201, "Job berhasil ditambahkan", { id });
   } catch (err) {
     if (err.name === "InvariantError")
-      return response(h, 400, err.message, null);
+      return response(res, 400, err.message, null);
     if (err.name === "AuthError") return response(res, 401, err.message, null);
     return response(res, 500, err.message, null);
   }
@@ -88,6 +94,10 @@ const updateJobByidHandler = async (req, res) => {
       },
       user,
     );
+
+    const cache = new CacheService();
+    await cache.delete(`job-${id}`);
+
     return response(res, 200, "Job berhasil diperbarui", job);
   } catch (err) {
     if (err.name === "NotFoundError")
@@ -102,6 +112,10 @@ const deleteJobHandler = async (req, res) => {
     const { jobId: id } = req.params;
     const user = req.user;
     const job = await deleteJobById(id, user);
+
+    const cache = new CacheService();
+    await cache.delete(`job-${id}`);
+
     return response(res, 200, "Job berhasil dihapus", job);
   } catch (err) {
     if (err.name === "NotFoundError")
@@ -149,7 +163,18 @@ const getJobByCategoryHandler = async (req, res) => {
 const getJobByIdHandler = async (req, res) => {
   try {
     const { jobId: id } = req.params;
+
+    const cache = new CacheService();
+    const cachedJob = await cache.get(`job-${id}`);
+
+    if (cachedJob) {
+      res.header("X-Data-Source", "cache");
+      return response(res, 200, "Job berhasil ditemukan", JSON.parse(cachedJob));
+    }
+
     const job = await getJobById(id);
+    await cache.set(`job-${id}`, JSON.stringify(job));
+    res.header("X-Data-Source", "database");
     return response(res, 200, "Job berhasil ditemukan", job);
   } catch (err) {
     if (err.name === "NotFoundError")

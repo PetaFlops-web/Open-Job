@@ -2,6 +2,8 @@ import multer from "multer";
 import path from "path";
 import process from "process";
 import fs from "fs";
+import { InvariantError } from "../../exceptions/index.js";
+
 const dirTOdocs = `${process.cwd()}/src/documents/pdf`;
 
 if (!fs.existsSync(dirTOdocs)) {
@@ -21,7 +23,7 @@ export const storage = multer.diskStorage({
 const fileFilter = (req, file, cb) => {
   const ext = path.extname(file.originalname).toLowerCase();
   if (ext !== ".pdf" || file.mimetype !== "application/pdf") {
-    return cb(new Error("Hanya file PDF yang diperbolehkan."), false);
+    return cb(new InvariantError("File is required!"), false);
   }
   cb(null, true);
 };

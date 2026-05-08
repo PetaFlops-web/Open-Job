@@ -14,8 +14,8 @@ function errorHandler(err, req, res, next) {
     return response(res, 400, err.message, null);
   }
 
-  if (err.message === "Hanya file PDF yang diperbolehkan.")
-    return response(res, 400, err.message, null); // ✅ 400 bukan 415
+  if (err.message === "File is required")
+    return response(res, 400, err.message, null);
 
   const status = err.statusCode || err.status || 500;
   const message = err.message || "Internal Server Error";

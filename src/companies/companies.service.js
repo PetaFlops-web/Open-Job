@@ -8,7 +8,10 @@ import {
 const addCompeny = async (payload, user) => {
   if (!user) throw new AuthError("invalid credentials");
 
-  const idCompany = await CompaniesRepository.addNewCompany(payload);
+  const idCompany = await CompaniesRepository.addNewCompany({
+    ...payload,
+    user_id: user.id,
+  });
 
   if (!idCompany) throw new InvariantError("Gagal menambahkan company.");
 

@@ -13,7 +13,7 @@ async function authenticateToken(req, res, next) {
 
       return next();
     } catch (error) {
-      return response(res, 400, error.message, null);
+      return response(res, 401, error.message, null);
     }
   }
 

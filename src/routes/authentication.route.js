@@ -6,7 +6,7 @@ import {
 import {
   authenticationSchema,
   refreshTokenSchema,
-} from "../authentications/authentication.shcema.js";
+} from "../authentications/authentication.schema.js";
 import validate from "../middlewares/validate.js";
 import { Router } from "express";
 

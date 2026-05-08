@@ -1,17 +1,24 @@
 import pg from "pg";
 import { nanoid } from "nanoid";
-
+import CacheService from "../cache/redis.service.js";
 class CompaniesRepository {
   constructor() {
     this._pool = new pg.Pool();
+    this._cache = new CacheService();
   }
 
   async addNewCompany(payload) {
     const idCompany = `company-${nanoid(16)}`;
 
     const query = {
-      text: "INSERT INTO companies(id, name, location, description) VALUES($1, $2, $3, $4) RETURNING id",
-      values: [idCompany, payload.name, payload.location, payload.description],
+      text: "INSERT INTO companies(id, name, location, description, user_id) VALUES($1, $2, $3, $4, $5) RETURNING id",
+      values: [
+        idCompany,
+        payload.name,
+        payload.location,
+        payload.description,
+        payload.user_id,
+      ],
     };
 
     const result = await this._pool.query(query);
@@ -24,6 +31,11 @@ class CompaniesRepository {
       values: [payload.name, payload.location, payload.description, id],
     };
     const result = await this._pool.query(query);
+
+    if (!result.rows[0]?.id) return null;
+
+    await this._cache.delete(`company-${id}`); // hapus, bukan set!
+
     return result.rows[0]?.id;
   }
 
@@ -50,6 +62,13 @@ class CompaniesRepository {
     };
 
     const result = await this._pool.query(query);
+
+    if (!result.rows[0]) {
+      return null;
+    }
+
+    await this._cache.set(`company-${id}`, JSON.stringify(result.rows[0]));
+
     return result.rows[0];
   }
 }

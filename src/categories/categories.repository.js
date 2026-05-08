@@ -1,7 +1,7 @@
 import pg from "pg";
 import { nanoid } from "nanoid";
 
-class CatgoriesRepository {
+class CategoriesRepository {
   constructor() {
     this._pool = new pg.Pool();
   }
@@ -53,4 +53,4 @@ class CatgoriesRepository {
   }
 }
 
-export default new CatgoriesRepository();
+export default new CategoriesRepository();

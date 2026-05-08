@@ -7,6 +7,7 @@ import routerJobs from "./routes/jobs.route.js";
 import routerApplication from "./routes/application.route.js";
 import routerBookMark from "./routes/bookmarks.route.js";
 import routerDocument from "./routes/documents.route.js";
+import routerProfile from "./routes/profile.route.js";
 import errorHandler from "./middlewares/error.js";
 import process from "process";
 
@@ -24,6 +25,7 @@ app.use("/jobs", routerJobs);
 app.use("/applications", routerApplication);
 app.use("/bookmarks", routerBookMark);
 app.use("/documents", routerDocument);
+app.use("/profile", routerProfile);
 app.use(express.urlencoded({ extended: true }));
 app.use(errorHandler);
 
